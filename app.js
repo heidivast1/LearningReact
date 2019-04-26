@@ -1,6 +1,3 @@
-const players = [
-
-];
 
 const Header = (props) => {
   console.log(props);
@@ -15,7 +12,10 @@ const Header = (props) => {
 const Player = (props) => {
   return(
     <div className="player">
-      <span className="player-name">{props.name}</span>
+      <span className="player-name">
+      <button className="remove-player" onClick={
+        () => props.removePlayer(props.id)}>✖</button>
+      {props.name}</span>
       <Counter />
     </div>
   );
@@ -56,39 +56,45 @@ class App extends React.Component {
     players: [
       {
         name: "Guil",
-        score: 50,
         id: 1
       },
       {
         name: "Treasure",
-        score: 85,
         id: 2
       },
       {
         name: "Ashley",
-        score: 95,
         id: 3
       },
       {
         name: "James",
-        score: 80,
         id: 4
       }
     ]
   };
+
+  handlerRemovePlayer = (id) => {
+    this.setState( prevState => {
+      return {
+        players: prevState.players.filter( p => p.id !== id )
+      };
+    });
+  }
 
   render() {
     return (
       <div className="scoreboard">
         <Header
         title="Scoreboard"
-        totalPlayers={props.initialPlayers.length}
+        totalPlayers={this.state.players.length}
         />
 
-        {props.initialPlayers.map( player =>
+        {this.state.players.map( player =>
           <Player
           name={player.name}
+          id={player.id}
           key={player.id.toString()}
+          removePlayer={this.handlerRemovePlayer}
           />
         )}
       </div>
@@ -97,6 +103,6 @@ class App extends React.Component {
 }
 
 ReactDOM.render(
-  <App initialPlayers={players}/>,
+  <App />,
   document.getElementById('root')
 );
